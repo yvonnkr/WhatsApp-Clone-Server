@@ -6,5 +6,5 @@ package com.yvolabs.whatsappclone.messaging.domain.message.vo;
  * @since 07/10/2024
  */
 public record MessageMediaContent(byte[] file,
-                                  String mime) {
+                                  String mimetype) {
 }
