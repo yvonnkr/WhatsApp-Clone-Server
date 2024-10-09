@@ -14,6 +14,9 @@ spring:
     url: jdbc:postgresql://${POSTGRES_HOST}:5432/${POSTGRES_DB}
     username: ${POSTGRES_USER}
     password: ${POSTGRES_PASSWORD}
+    hikari:
+      poolName: Hikari
+      auto-commit: false
   data:
     jpa:
       repositories:
@@ -43,7 +46,7 @@ spring:
     change-log: classpath:db/changelog/master.xml
     default-schema: whatsappclone
     contexts: dev
-  #    drop-first: true
+#    drop-first: true
   security:
     oauth2:
       resourceserver:
