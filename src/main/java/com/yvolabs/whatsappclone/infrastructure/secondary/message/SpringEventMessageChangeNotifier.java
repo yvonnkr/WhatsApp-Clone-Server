@@ -1,5 +1,6 @@
 package com.yvolabs.whatsappclone.infrastructure.secondary.message;
 
+import com.yvolabs.whatsappclone.infrastructure.primary.message.RestMessage;
 import com.yvolabs.whatsappclone.messaging.domain.message.aggregate.Message;
 import com.yvolabs.whatsappclone.messaging.domain.message.service.MessageChangeNotifier;
 import com.yvolabs.whatsappclone.messaging.domain.message.vo.ConversationPublicId;
@@ -30,7 +31,9 @@ public class SpringEventMessageChangeNotifier implements MessageChangeNotifier {
 
     @Override
     public State<Void, String> send(Message message, List<UserPublicId> userToNotify) {
-        return null;
+        MessageWithUsers messageWithUsers = new MessageWithUsers(message, userToNotify);
+        applicationEventPublisher.publishEvent(messageWithUsers);
+        return State.<Void, String>builder().forSuccess();
     }
 
     @Override
@@ -45,6 +48,12 @@ public class SpringEventMessageChangeNotifier implements MessageChangeNotifier {
     public void handleDeleteConversation(ConversationIdWithUsers conversationIdWithUsers) {
         notificationService.sendMessage(conversationIdWithUsers.conversationPublicId().value(),
                 conversationIdWithUsers.users(), NotificationEventName.DELETE_CONVERSATION);
+    }
+
+    @EventListener
+    public void handleNewMessage(MessageWithUsers messageWithUsers) {
+        notificationService.sendMessage(RestMessage.from(messageWithUsers.message()),
+                messageWithUsers.userToNotify(), NotificationEventName.NEW_MESSAGE);
     }
 
 
