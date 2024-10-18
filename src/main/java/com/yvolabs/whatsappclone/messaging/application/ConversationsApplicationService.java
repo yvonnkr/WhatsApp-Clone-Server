@@ -31,7 +31,7 @@ public class ConversationsApplicationService {
     private final ConversationReader conversationReader;
     private final ConversationDeleter conversationDeleter;
     private final UsersApplicationService usersApplicationService;
-//    private final ConversationViewed conversationViewed; //TODO
+    private final ConversationViewed conversationViewed;
 
     public ConversationsApplicationService(ConversationRepository conversationRepository,
                                            UserRepository userRepository,
@@ -43,7 +43,7 @@ public class ConversationsApplicationService {
         this.conversationReader = new ConversationReader(conversationRepository);
         this.conversationDeleter = new ConversationDeleter(conversationRepository, messageChangeNotifier);
         this.usersApplicationService = usersApplicationService;
-//        this.conversationViewed = new ConversationViewed(messageRepository, messageChangeNotifier, userReader);
+        this.conversationViewed = new ConversationViewed(messageRepository, messageChangeNotifier, userReader);
     }
 
     @Transactional
@@ -71,10 +71,9 @@ public class ConversationsApplicationService {
         return this.conversationReader.getOneByPublicIdAndUserId(conversationPublicId, authenticatedUser.getUserPublicId());
     }
 
-    //TODO
-//    @Transactional
-//    public State<Integer, String> markConversationAsRead(ConversationPublicId conversationPublicId) {
-//        User authenticatedUser = usersApplicationService.getAuthenticatedUser();
-//        return conversationViewed.markAsRead(conversationPublicId, authenticatedUser.getUserPublicId());
-//    }
+    @Transactional
+    public State<Integer, String> markConversationAsRead(ConversationPublicId conversationPublicId) {
+        User authenticatedUser = usersApplicationService.getAuthenticatedUser();
+        return conversationViewed.markAsRead(conversationPublicId, authenticatedUser.getUserPublicId());
+    }
 }
